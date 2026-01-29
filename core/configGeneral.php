@@ -1,12 +1,12 @@
 <?php
-	const SERVERURL = "http://localhost/SPV/";
+	const SERVERURL = "http://spv.test/";
 
 	const COMPANY = "SPV";
 
 	/*====================================
 	=            Zona horaria            =
 	====================================*/
-	date_default_timezone_set("America/El_Salvador");
+	date_default_timezone_set("America/Argentina/Buenos_Aires");
 
 	/**
 		Zonas horarias:

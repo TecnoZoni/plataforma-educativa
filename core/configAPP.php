@@ -3,7 +3,7 @@
 	|  Datos del servidor - Data of the server  |
 	===========================================*/
 	const SERVER="localhost";
-	const DB="spv";
+	const DB="plataforma_cyp";
 	const USER='root';
 	const PASS="";
 
