@@ -5,7 +5,7 @@
 <script src="<?php echo SERVERURL; ?>views/js/trumbowyg.min.js"></script>
 <script src="<?php echo SERVERURL; ?>views/js/es.min.js"></script>
 <script>
-	$('#spv-editor').trumbowyg({
+	$('#spv-editor, #spv-editor2').trumbowyg({
 	    btns: [
 	        ['viewHTML'],
 	        ['undo', 'redo'], // Only supported in Blink browsers

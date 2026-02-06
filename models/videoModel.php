@@ -9,13 +9,14 @@
 
 		/*----------  Add Video Model  ----------*/
 		public function add_video_model($data){
-			$query=self::connect()->prepare("INSERT INTO clase(Video,Fecha,Titulo,Tutor,Descripcion,Adjuntos) VALUES(:Video,:Fecha,:Titulo,:Tutor,:Descripcion,:Adjuntos)");
+			$query=self::connect()->prepare("INSERT INTO clase(Video,Fecha,Titulo,Tutor,Descripcion,Adjuntos,Actividad) VALUES(:Video,:Fecha,:Titulo,:Tutor,:Descripcion,:Adjuntos,:Actividad)");
 			$query->bindParam(":Video",$data['Video']);
 			$query->bindParam(":Fecha",$data['Fecha']);
 			$query->bindParam(":Titulo",$data['Titulo']);
 			$query->bindParam(":Tutor",$data['Tutor']);
 			$query->bindParam(":Descripcion",$data['Descripcion']);
 			$query->bindParam(":Adjuntos",$data['Adjuntos']);
+			$query->bindParam(":Actividad",$data['Actividad']);
 			$query->execute();
 			return $query;
 		}

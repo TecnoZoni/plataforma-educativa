@@ -74,7 +74,7 @@
 				    				</div>
 								</div>
 							</div>
-				    	</fieldset>
+				    	</fieldset>				    	
 				    	<fieldset class="full-box">
 							<legend><i class="zmdi zmdi-attachment"></i> Archivos adjuntos</legend>
 							<div class="container-fluid">
@@ -92,6 +92,16 @@
 											</div>
 											<span><small>Tamaño máximo de los archivos adjuntos 5MB. Tipos de archivos permitidos imágenes PNG y JPG, documentos PDF, WORD y POWERPOINT</small></span>
 										</div>
+				    				</div>
+								</div>
+							</div>
+				    	</fieldset>
+						<fieldset class="full-box">
+							<legend><i class="zmdi zmdi-assignment"></i> Activiadad de la clase </legend>
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-xs-12">
+										  <textarea name="activity" class="full-box" id="spv-editor2"></textarea>
 				    				</div>
 								</div>
 							</div>

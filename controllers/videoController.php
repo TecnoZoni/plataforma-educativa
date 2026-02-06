@@ -14,6 +14,7 @@
 			$date=self::clean_string($_POST['date']);
 			$video=$_POST['code'];
 			$description=$_POST['description'];
+			$activity=$_POST['activity'];
 
 			$AttMaxSize=5120;
 			$AttDir="../attachments/class/";
@@ -109,7 +110,8 @@
 					"Titulo"=>$title,
 					"Tutor"=>$teacher,
 					"Descripcion"=>$description,
-					"Adjuntos"=>$AttFinalName
+					"Adjuntos"=>$AttFinalName,
+					"Actividad"=>$activity
 				];
 				if(self::add_video_model($data)){
 					$dataAlert=[
@@ -120,10 +122,10 @@
 					return self::sweet_alert_reset($dataAlert);
 				}else{
 					if($AttFinalName!=""){
-						$filesA=explode(",", $AttFinalName);
+						$files=explode(",", $AttFinalName);
 						foreach ($files as $filesA) {
-							chmod($AttDir.$files, 0777);
-							unlink($AttDir.$files);	
+							chmod($AttDir.$filesA, 0777);
+							unlink($AttDir.$filesA);	
 						}
 					}
 					$dataAlert=[
