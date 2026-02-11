@@ -7,6 +7,121 @@ if ($actionsRequired) {
 
 class activityController extends activityModel
 {
+
+    /*----------  Add Response Activity Controller  ----------*/
+    public function add_response_activity_controller()
+    {
+        $id_clase = self::clean_string($_POST['codeVideo']);
+        $codeUser = self::clean_string($_POST['codeUser']);
+        $response = $_POST['response'];
+
+        $AttMaxSize = 5120; // 5MB en KB
+        $AttDir = "../attachments/activity/"; // NUEVA CARPETA
+        $AttFinalName = "";
+        $uploaded_files = [];
+
+        // Crear el directorio si no existe
+        if (!is_dir($AttDir)) {
+            if (!mkdir($AttDir, 0777, true) && !is_dir($AttDir)) {
+                return self::sweet_alert_single([
+                    "title" => "Error crítico",
+                    "text" => "No se pudo crear el directorio para adjuntos de actividades. Contactá al administrador.",
+                    "type" => "error"
+                ]);
+            }
+        }
+
+        // Proceso de subida de archivos
+        if (!empty($_FILES["attachments"]["name"][0])) {
+            foreach ($_FILES["attachments"]['tmp_name'] as $key => $tmp_name) {
+                if (empty($_FILES["attachments"]["name"][$key])) {
+                    continue;
+                }
+
+                $AttNameOrig = $_FILES["attachments"]["name"][$key];
+                $AttName = str_ireplace([" ", ","], "_", $AttNameOrig);
+                $AttType = $_FILES['attachments']['type'][$key];
+                $AttSize = $_FILES['attachments']['size'][$key];
+                $finalPath = $AttDir . $AttName;
+
+                $allowed_types = [
+                    "image/jpeg",
+                    "image/png",
+                    "application/msword",
+                    "application/vnd.ms-powerpoint",
+                    "application/pdf",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                ];
+
+                // Validaciones
+                if (!in_array($AttType, $allowed_types)) {
+                    foreach ($uploaded_files as $uf) @unlink($AttDir . $uf);
+                    return self::sweet_alert_single(["title" => "Error", "text" => "Tipo de archivo no permitido: {$AttName}", "type" => "error"]);
+                }
+                if (($AttSize / 1024) > $AttMaxSize) {
+                    foreach ($uploaded_files as $uf) @unlink($AttDir . $uf);
+                    return self::sweet_alert_single(["title" => "Error", "text" => "El archivo {$AttName} supera los 5MB", "type" => "error"]);
+                }
+                if (is_file($finalPath)) {
+                    foreach ($uploaded_files as $uf) @unlink($AttDir . $uf);
+                    return self::sweet_alert_single(["title" => "Error", "text" => "Ya existe un archivo con el nombre {$AttName}", "type" => "error"]);
+                }
+
+                // Subir archivo
+                if (move_uploaded_file($tmp_name, $finalPath)) {
+                    $uploaded_files[] = $AttName;
+                    $AttFinalName = $AttFinalName === "" ? $AttName : $AttFinalName . "," . $AttName;
+                } else {
+                    foreach ($uploaded_files as $uf) @unlink($AttDir . $uf);
+                    return self::sweet_alert_single(["title" => "Error", "text" => "No se pudo subir el archivo {$AttName}", "type" => "error"]);
+                }
+            }
+        }
+
+        // Buscar si ya existe respuesta del alumno
+        $query = self::connect()->prepare("SELECT id, Adjuntos FROM respuestas WHERE clase_id=:clase_id AND Codigo=:Codigo");
+        $query->execute([':clase_id' => $id_clase, ':Codigo' => $codeUser]);
+        $existing = $query->fetch();
+
+        if ($existing) {
+            // Actualizar
+            $old_adjuntos = $existing['Adjuntos'] ?? "";
+            $final_adjuntos = $AttFinalName !== "" ? ($old_adjuntos !== "" ? $old_adjuntos . "," . $AttFinalName : $AttFinalName) : $old_adjuntos;
+
+            $data = [
+                "id" => $existing['id'],
+                "Respuesta" => $response,
+                "Adjuntos" => $final_adjuntos
+            ];
+
+            if (self::update_response_activity_model($data)) {
+                return self::sweet_alert_reset(["title" => "¡Respuesta actualizada!", "text" => "Tu respuesta se actualizó correctamente", "type" => "success"]);
+            } else {
+                foreach ($uploaded_files as $uf) @unlink($AttDir . $uf);
+                return self::sweet_alert_single(["title" => "Error", "text" => "No se pudo actualizar la respuesta", "type" => "error"]);
+            }
+        } else {
+            // Insertar nueva
+            $final_adjuntos = $AttFinalName;
+
+            $data = [
+                "clase_id" => $id_clase,
+                "Respuesta" => $response,
+                "Nota" => 0.0,
+                "Codigo" => $codeUser,
+                "Adjuntos" => $final_adjuntos
+            ];
+
+            if (self::add_response_activity_model($data)) {
+                return self::sweet_alert_reset(["title" => "¡Respuesta guardada!", "text" => "Tu respuesta se guardó correctamente", "type" => "success"]);
+            } else {
+                foreach ($uploaded_files as $uf) @unlink($AttDir . $uf);
+                return self::sweet_alert_single(["title" => "Error", "text" => "No se pudo guardar la respuesta", "type" => "error"]);
+            }
+        }
+    }
+
     /*----------  Pagination Activity Controller  ----------*/
     public function pagination_activity_controller($Pagina, $Registros)
     {
@@ -179,5 +294,11 @@ class activityController extends activityModel
             ];
             return self::sweet_alert_single($dataAlert);
         }
+    }
+
+    /*----------  Get User Response Controller ----------*/
+    public function get_user_response_controller($clase_id, $codigo)
+    {
+        return self::get_user_response_model($clase_id, $codigo);
     }
 }

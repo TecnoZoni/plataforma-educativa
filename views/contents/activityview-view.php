@@ -54,6 +54,7 @@
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							<h3 class="panel-title text-center"><i class="zmdi zmdi-info"></i> Respuesta a la tarea</h3>
+							<?php echo $rows['Actividad']; ?>
 						</div>
 						<div class="panel-body">
 							<?php echo $rows['Respuesta']; ?>

@@ -9,16 +9,14 @@ class activityModel extends mainModel
 {
 
     /*----------  Add Activity Model  ----------*/
-    public function add_activity_model($data)
+    public function add_response_activity_model($data)
     {
-        $query = self::connect()->prepare("INSERT INTO clase(Video,Fecha,Titulo,Tutor,Descripcion,Adjuntos,Actividad) VALUES(:Video,:Fecha,:Titulo,:Tutor,:Descripcion,:Adjuntos,:Actividad)");
-        $query->bindParam(":Video", $data['Video']);
-        $query->bindParam(":Fecha", $data['Fecha']);
-        $query->bindParam(":Titulo", $data['Titulo']);
-        $query->bindParam(":Tutor", $data['Tutor']);
-        $query->bindParam(":Descripcion", $data['Descripcion']);
+        $query = self::connect()->prepare("INSERT INTO respuestas(clase_id,Respuesta,Nota,Codigo,Adjuntos) VALUES(:clase_id,:Respuesta,:Nota,:Codigo,:Adjuntos)");
+        $query->bindParam(":clase_id", $data['clase_id']);
+        $query->bindParam(":Respuesta", $data['Respuesta']);
+        $query->bindParam(":Nota", $data['Nota']);
+        $query->bindParam(":Codigo", $data['Codigo']);
         $query->bindParam(":Adjuntos", $data['Adjuntos']);
-        $query->bindParam(":Actividad", $data['Actividad']);
         $query->execute();
         return $query;
     }
@@ -35,6 +33,7 @@ class activityModel extends mainModel
             $query = self::connect()->prepare("SELECT
                                                             c.id AS clase_id,
                                                             c.Titulo,
+                                                            c.Actividad,
                                                             CONCAT(e.Nombres, ' ', e.Apellidos) AS Alumno,
                                                             res.Nota,
                                                             res.Adjuntos,
@@ -63,4 +62,25 @@ class activityModel extends mainModel
         $query->execute();
         return $query;
     }
+
+    /*----------  Update Response Activity Model ----------*/
+    protected function update_response_activity_model($data)
+    {
+        $query = self::connect()->prepare("UPDATE respuestas SET Respuesta=:Respuesta, Adjuntos=:Adjuntos WHERE id=:id");
+        $query->bindParam(":Respuesta", $data['Respuesta']);
+        $query->bindParam(":Adjuntos", $data['Adjuntos']);
+        $query->bindParam(":id", $data['id']);
+        $query->execute();
+        return $query;
+    }
+
+    /*----------  Get User Response by Class and Code ----------*/
+protected function get_user_response_model($clase_id, $codigo)
+{
+    $query = self::connect()->prepare("SELECT id, Respuesta, Adjuntos, Nota FROM respuestas WHERE clase_id = :clase_id AND Codigo = :codigo LIMIT 1");
+    $query->bindParam(':clase_id', $clase_id, PDO::PARAM_INT);
+    $query->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+    $query->execute();
+    return $query->fetch(PDO::FETCH_ASSOC);
+}
 }
