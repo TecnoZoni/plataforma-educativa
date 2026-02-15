@@ -21,7 +21,11 @@ class viewsModel
 			$views == "videolist" ||
 			$views == "search" ||
 			$views == "activitylist" ||
-			$views == "activityview"
+			$views == "activityview" ||
+			$views == "group" ||
+			$views == "grouplist" ||
+			$views == "groupinfo" ||
+			$views == "groupstudent"
 		) {
 			if (is_file("./views/contents/" . $views . "-view.php")) {
 				$contents = "./views/contents/" . $views . "-view.php";

@@ -73,6 +73,23 @@
 				</li>
 				<li>
 					<a href="#!" class="btn-sideBar-SubMenu">
+						<i class="zmdi zmdi-accounts-outline zmdi-hc-fw"></i> Grupos <i class="zmdi zmdi-caret-down pull-right"></i>
+					</a>
+					<ul class="list-unstyled full-box">
+						<li>
+							<a href="<?php echo SERVERURL; ?>group/">
+								<i class="zmdi zmdi-accounts-add zmdi-hc-fw"></i> Nuevo Grupo
+							</a>
+						</li>
+						<li>
+							<a href="<?php echo SERVERURL; ?>grouplist/">
+								<i class="zmdi zmdi-accounts-list zmdi-hc-fw"></i> Listado de Grupos
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#!" class="btn-sideBar-SubMenu">
 						<i class="zmdi zmdi-videocam zmdi-hc-fw"></i> Clases <i class="zmdi zmdi-caret-down pull-right"></i>
 					</a>
 					<ul class="list-unstyled full-box">

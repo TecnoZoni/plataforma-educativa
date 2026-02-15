@@ -16,13 +16,26 @@ class activityController extends activityModel
         $response = $_POST['response'];
 
         $AttMaxSize = 5120; // 5MB en KB
-        $AttDir = "../attachments/activity/"; // NUEVA CARPETA
+
+        // Ruta correcta DENTRO del proyecto (plataforma-educativa/attachments/activity/)
+        $baseDir = dirname(__DIR__) . '/attachments/';
+        $AttDir = $baseDir . 'activity/';
+
         $AttFinalName = "";
         $uploaded_files = [];
 
-        // Crear el directorio si no existe
+        // Crear carpetas si no existen (primero attachments, luego activity)
+        if (!is_dir($baseDir)) {
+            if (!mkdir($baseDir, 0777, true)) {
+                return self::sweet_alert_single([
+                    "title" => "Error crítico",
+                    "text" => "No se pudo crear el directorio base para adjuntos. Contactá al administrador.",
+                    "type" => "error"
+                ]);
+            }
+        }
         if (!is_dir($AttDir)) {
-            if (!mkdir($AttDir, 0777, true) && !is_dir($AttDir)) {
+            if (!mkdir($AttDir, 0777, true)) {
                 return self::sweet_alert_single([
                     "title" => "Error crítico",
                     "text" => "No se pudo crear el directorio para adjuntos de actividades. Contactá al administrador.",
