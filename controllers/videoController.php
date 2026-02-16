@@ -691,6 +691,7 @@
 			$date=self::clean_string($_POST['date']);
 			$video=$_POST['upcode'];
 			$description=$_POST['description'];
+			$activity=$_POST['activity'];
 
 			$AttMaxSize=5120;
 			$AttDir="../attachments/class/";
@@ -787,6 +788,7 @@
 				"Video"=>$video,
 				"Tutor"=>$teacher,
 				"Descripcion"=>$description,
+				"Actividad"=>$activity,
 				"Adjuntos"=>$finalAtts
 			];
 

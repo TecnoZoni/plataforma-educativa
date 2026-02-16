@@ -46,13 +46,14 @@
 
 		/*----------  Update Video Model  ----------*/
 		public function update_video_model($data){
-			$query=self::connect()->prepare("UPDATE clase SET Video=:Video,Fecha=:Fecha,Titulo=:Titulo,Tutor=:Tutor,Descripcion=:Descripcion,Adjuntos=:Adjuntos WHERE id=:id");
+			$query=self::connect()->prepare("UPDATE clase SET Video=:Video,Fecha=:Fecha,Titulo=:Titulo,Tutor=:Tutor,Descripcion=:Descripcion,Adjuntos=:Adjuntos,Actividad=:Actividad WHERE id=:id");
 			$query->bindParam(":Video",$data['Video']);
 			$query->bindParam(":Fecha",$data['Fecha']);
 			$query->bindParam(":Titulo",$data['Titulo']);
 			$query->bindParam(":Tutor",$data['Tutor']);
 			$query->bindParam(":Descripcion",$data['Descripcion']);
 			$query->bindParam(":Adjuntos",$data['Adjuntos']);
+			$query->bindParam(":Actividad",$data['Actividad']);
 			$query->bindParam(":id",$data['id']);
 			$query->execute();
 			return $query;

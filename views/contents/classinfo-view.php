@@ -154,6 +154,18 @@
 								</div>
 							</div>
 				    	</fieldset>
+						<fieldset class="full-box" style="margin-top: 10px;">
+							<legend><i class="zmdi zmdi-assignment"></i> Activiadad de la clase </legend>
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-xs-12">
+										  <textarea name="activity" class="full-box" id="spv-editor2">
+											<?php echo $rows['Actividad']; ?>
+										  </textarea>
+				    				</div>
+								</div>
+							</div>
+				    	</fieldset>
 					    <p class="text-center">
 					    	<button type="submit" class="btn btn-success btn-raised btn-sm"><i class="zmdi zmdi-refresh"></i> Guardar cambios</button>
 					    </p>

@@ -55,7 +55,7 @@ if ($data->rowCount() > 0):
 				</div>
 
 				<!-- Descripción y adjuntos de la clase -->
-				<div class="full-box thumbnail" style="padding: 20px;">
+				<div class="full-box thumbnail" style="padding: 20px; margin-bottom: 30px;">
 					<h3 class="text-titles text-center"><i class="zmdi zmdi-format-align-left"></i> Descripción de la clase</h3>
 					<div style="font-size: 16px; line-height: 1.6;">
 						<?php echo $rows['Descripcion']; ?>
@@ -91,6 +91,14 @@ if ($data->rowCount() > 0):
 							</tbody>
 						</table>
 					<?php endif; ?>
+				</div>
+
+				<!-- Actividad de la clase -->
+				<div class="full-box thumbnail mt-5" style="padding: 20px;">
+					<h3 class="text-titles text-center"><i class="zmdi zmdi-file-text"></i> Actividad de la clase</h3>
+					<div style="font-size: 16px; line-height: 1.6;">
+						<?php echo $rows['Actividad']; ?>
+					</div>
 				</div>
 
 				<!-- Respuesta actual (si existe) -->
@@ -171,7 +179,7 @@ if ($data->rowCount() > 0):
 													</button>
 												</span>
 											</div>
-											<span >
+											<span>
 												<small>Máximo 5MB por archivo. Formatos permitidos: imágenes (JPG/PNG), PDF, Word, PowerPoint.</small>
 											</span>
 										</div>
@@ -203,20 +211,20 @@ if ($data->rowCount() > 0):
 						</div>
 
 						<div class="form-group">
-    <label>Archivo adjunto (opcional)</label>
-    <input type="file" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.ppt,.pptx">
-    <div class="input-group">
-        <input type="text" readonly class="form-control" placeholder="Elija un archivo adjunto...">
-        <span class="input-group-btn input-group-sm">
-            <button type="button" class="btn btn-fab btn-fab-mini">
-                <i class="zmdi zmdi-attachment-alt"></i>
-            </button>
-        </span>
-    </div>
-    <span class="help-block">
-        <small>Máximo 5MB. Formatos permitidos: imágenes (JPG/PNG), PDF, Word, PowerPoint.</small>
-    </span>
-</div>
+							<label>Archivo adjunto (opcional)</label>
+							<input type="file" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.ppt,.pptx">
+							<div class="input-group">
+								<input type="text" readonly class="form-control" placeholder="Elija un archivo adjunto...">
+								<span class="input-group-btn input-group-sm">
+									<button type="button" class="btn btn-fab btn-fab-mini">
+										<i class="zmdi zmdi-attachment-alt"></i>
+									</button>
+								</span>
+							</div>
+							<span class="help-block">
+								<small>Máximo 5MB. Formatos permitidos: imágenes (JPG/PNG), PDF, Word, PowerPoint.</small>
+							</span>
+						</div>
 
 						<p class="text-center">
 							<button type="submit" class="btn btn-info btn-raised">Enviar comentario</button>
