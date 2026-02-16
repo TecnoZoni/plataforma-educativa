@@ -7,8 +7,6 @@ if ($actionsRequired) {
 
 class activityController extends activityModel
 {
-
-    /*----------  Add Response Activity Controller  ----------*/
     public function add_response_activity_controller()
     {
         $id_clase = self::clean_string($_POST['codeVideo']);
