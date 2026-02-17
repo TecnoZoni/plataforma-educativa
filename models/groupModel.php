@@ -88,7 +88,7 @@ class groupModel extends mainModel
 
 	public function get_students_by_dont_group_model()
 	{
-		$query = "SELECT e.Codigo, e.Nombres, e.Apellidos, e.Email FROM estudiante e 
+		$query = "SELECT e.Codigo, e.Nombres, e.Apellidos FROM estudiante e 
 		WHERE NOT EXISTS (
 		 SELECT 1 FROM estudiante_grupo eg 
 		 WHERE eg.codigo COLLATE utf8mb3_spanish_ci = e.Codigo 
@@ -98,7 +98,7 @@ class groupModel extends mainModel
 
 	public function get_students_by_group_model($id)
 	{
-		$query = self::connect()->prepare("SELECT e.Codigo, e.Nombres, e.Apellidos, e.Email 
+		$query = self::connect()->prepare("SELECT e.Codigo, e.Nombres, e.Apellidos
             FROM estudiante e 
             INNER JOIN estudiante_grupo eg 
                 ON eg.codigo COLLATE utf8mb3_spanish_ci = e.Codigo 

@@ -9,7 +9,7 @@
 		<div class="full-box dashboard-sideBar-UserInfo">
 			<figure class="full-box">
 				<img src="<?php echo SERVERURL; ?>views/assets/img/logo.png" alt="UserIcon">
-				<figcaption class="text-center text-titles"><?php echo $_SESSION['userName']; ?></figcaption>
+				<h3 class="text-center text-titles"><?php echo $_SESSION['userName']; ?></h3>
 			</figure>
 			<ul class="full-box list-unstyled text-center">
 				<?php if ($_SESSION['userType'] == "Administrador"): ?>

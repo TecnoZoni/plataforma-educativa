@@ -54,13 +54,7 @@
 										  	<label class="control-label">Apellidos *</label>
 										  	<input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}" class="form-control" type="text" name="lastname" value="<?php if(isset($_POST['lastname'])){ echo $_POST['lastname']; } ?>" required="" maxlength="30">
 										</div>
-				    				</div>
-				    				<div class="col-xs-12 col-sm-6">
-										<div class="form-group label-floating">
-										  	<label class="control-label">Email</label>
-										  	<input class="form-control" type="email" name="email" value="<?php if(isset($_POST['email'])){ echo $_POST['email']; } ?>">
-										</div>
-				    				</div>
+				    				</div>				    				
 				    			</div>
 				    		</div>
 				    	</fieldset>

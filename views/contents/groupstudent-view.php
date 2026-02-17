@@ -54,7 +54,6 @@
 											<th>Código</th>
 											<th>Nombres</th>
 											<th>Apellidos</th>
-											<th>Email</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -63,7 +62,6 @@
 												<td><?php echo htmlspecialchars($s['Codigo']); ?></td>
 												<td><?php echo htmlspecialchars($s['Nombres']); ?></td>
 												<td><?php echo htmlspecialchars($s['Apellidos']); ?></td>
-												<td><?php echo htmlspecialchars($s['Email']); ?></td>
 											</tr>
 										<?php endforeach; ?>
 									</tbody>
@@ -99,7 +97,7 @@
 														<select class="form-control" name="students[]" multiple size="10">
 															<?php foreach ($available_students as $student): ?>
 																<option value="<?php echo htmlspecialchars($student['Codigo']); ?>">
-																	<?php echo htmlspecialchars($student['Nombres'] . ' ' . $student['Apellidos'] . ' (' . $student['Codigo'] . ') - ' . $student['Email']); ?>
+																	<?php echo htmlspecialchars($student['Nombres'] . ' ' . $student['Apellidos'] . ' (' . $student['Codigo'] . ')  '); ?>
 																</option>
 															<?php endforeach; ?>
 														</select>

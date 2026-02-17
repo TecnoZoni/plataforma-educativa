@@ -14,7 +14,6 @@ class studentController extends studentModel
 		$name = self::clean_string($_POST['name']);
 		$lastname = self::clean_string($_POST['lastname']);
 		$gender = self::clean_string($_POST['gender']);
-		$email = self::clean_string($_POST['email']);
 		$username = self::clean_string($_POST['username']);
 		$password1 = self::clean_string($_POST['password1']);
 		$password2 = self::clean_string($_POST['password2']);
@@ -41,8 +40,7 @@ class studentController extends studentModel
 					$dataStudent = [
 						"Codigo" => $code,
 						"Nombres" => $name,
-						"Apellidos" => $lastname,
-						"Email" => $email
+						"Apellidos" => $lastname
 					];
 
 					if (self::save_account($dataAccount) && self::add_student_model($dataStudent)) {
@@ -136,8 +134,7 @@ class studentController extends studentModel
 					<tr>
 						<th class="text-center">#</th>
 						<th class="text-center">Nombres</th>
-						<th class="text-center">Apellidos</th>
-						<th class="text-center">Email</th>
+						<th class="text-center">Apellidos</th>						
 						<th class="text-center">A. Datos</th>
 						<th class="text-center">A. Cuenta</th>
 						<th class="text-center">Eliminar</th>
@@ -153,8 +150,7 @@ class studentController extends studentModel
 					<tr>
 						<td>' . $nt . '</td>
 						<td>' . $rows['Nombres'] . '</td>
-						<td>' . $rows['Apellidos'] . '</td>
-						<td>' . $rows['Email'] . '</td>
+						<td>' . $rows['Apellidos'] . '</td>						
 						<td>
 							<a href="' . SERVERURL . 'studentinfo/' . $rows['Codigo'] . '/" class="btn btn-success btn-raised btn-xs">
 								<i class="zmdi zmdi-refresh"></i>
@@ -253,13 +249,11 @@ class studentController extends studentModel
 		$code = self::clean_string($_POST['code']);
 		$name = self::clean_string($_POST['name']);
 		$lastname = self::clean_string($_POST['lastname']);
-		$email = self::clean_string($_POST['email']);
 
 		$data = [
 			"Codigo" => $code,
 			"Nombres" => $name,
-			"Apellidos" => $lastname,
-			"Email" => $email
+			"Apellidos" => $lastname
 		];
 
 		if (self::update_student_model($data)) {

@@ -11,11 +11,10 @@ class studentModel extends mainModel
 	/*----------  Add Student Model  ----------*/
 	public function add_student_model($data)
 	{
-		$query = self::connect()->prepare("INSERT INTO estudiante(Codigo,Nombres,Apellidos,Email) VALUES(:Codigo,:Nombres,:Apellidos,:Email)");
+		$query = self::connect()->prepare("INSERT INTO estudiante(Codigo,Nombres,Apellidos) VALUES(:Codigo,:Nombres,:Apellidos)");
 		$query->bindParam(":Codigo", $data['Codigo']);
 		$query->bindParam(":Nombres", $data['Nombres']);
 		$query->bindParam(":Apellidos", $data['Apellidos']);
-		$query->bindParam(":Email", $data['Email']);
 		$query->execute();
 		return $query;
 	}
@@ -45,10 +44,9 @@ class studentModel extends mainModel
 	/*----------  Update Student Model  ----------*/
 	public function update_student_model($data)
 	{
-		$query = self::connect()->prepare("UPDATE estudiante SET Nombres=:Nombres,Apellidos=:Apellidos,Email=:Email WHERE Codigo=:Codigo");
+		$query = self::connect()->prepare("UPDATE estudiante SET Nombres=:Nombres,Apellidos=:Apellidos WHERE Codigo=:Codigo");
 		$query->bindParam(":Nombres", $data['Nombres']);
-		$query->bindParam(":Apellidos", $data['Apellidos']);
-		$query->bindParam(":Email", $data['Email']);
+		$query->bindParam(":Apellidos", $data['Apellidos']);		
 		$query->bindParam(":Codigo", $data['Codigo']);
 		$query->execute();
 		return $query;
