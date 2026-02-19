@@ -141,4 +141,13 @@ class groupModel extends mainModel
 			return false;
 		}
 	}
+
+	public function get_groups_with_category_model()
+	{
+		$query = "SELECT g.id, g.Nombre AS GrupoNombre, g.Recompensa, c.Nombre AS CategoriaNombre
+		FROM grupos g
+		INNER JOIN categoria c ON g.categoria_id = c.id
+		ORDER BY g.id;";
+		return self::execute_single_query($query);
+	}
 }

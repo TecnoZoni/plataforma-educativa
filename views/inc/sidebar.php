@@ -122,12 +122,7 @@
 					<a href="<?php echo SERVERURL; ?>home/">
 						<i class="zmdi zmdi-view-dashboard zmdi-hc-fw"></i> Inicio
 					</a>
-				</li>
-				<li>
-					<a href="<?php echo SERVERURL; ?>videonow/">
-						<i class="zmdi zmdi-tv-play zmdi-hc-fw"></i> Clases de hoy
-					</a>
-				</li>
+				</li>				
 				<li>
 					<a href="<?php echo SERVERURL; ?>videolist/">
 						<i class="zmdi zmdi-tv-list zmdi-hc-fw"></i> Listado de clases

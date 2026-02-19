@@ -25,7 +25,8 @@ class viewsModel
 			$views == "group" ||
 			$views == "grouplist" ||
 			$views == "groupinfo" ||
-			$views == "groupstudent"
+			$views == "groupstudent" ||
+			$views == "classgroup"
 		) {
 			if (is_file("./views/contents/" . $views . "-view.php")) {
 				$contents = "./views/contents/" . $views . "-view.php";

@@ -400,4 +400,8 @@ class groupController extends groupModel
 
 		return self::sweet_alert_single($dataAlert);
 	}
+
+	public function get_groups_with_category_controller(){
+		return self::get_groups_with_category_model();
+	}
 }
