@@ -401,7 +401,39 @@ class groupController extends groupModel
 		return self::sweet_alert_single($dataAlert);
 	}
 
-	public function get_groups_with_category_controller(){
+	public function get_groups_with_category_controller()
+	{
 		return self::get_groups_with_category_model();
+	}
+
+	/*----------  Remover estudiante de grupo ----------*/
+	public function remove_student_from_group_controller()
+	{
+		$grupo_id = self::clean_string($_POST['grupo_id'] ?? '');
+		$codigo   = self::clean_string($_POST['codigo'] ?? '');
+
+		if (empty($grupo_id) || empty($codigo) || !is_numeric($grupo_id)) {
+			$dataAlert = [
+				"title" => "¡Error!",
+				"text"  => "Datos inválidos",
+				"type"  => "error"
+			];
+			return self::sweet_alert_single($dataAlert);
+		}
+
+		if (self::remove_student_from_group_model($grupo_id, $codigo)) {
+			$dataAlert = [
+				"title" => "¡Estudiante removido!",
+				"text"  => "El alumno ha sido quitado del grupo correctamente.",
+				"type"  => "success"
+			];
+		} else {
+			$dataAlert = [
+				"title" => "¡Ocurrió un error!",
+				"text"  => "No se pudo quitar al estudiante del grupo.",
+				"type"  => "error"
+			];
+		}
+		return self::sweet_alert_single($dataAlert);
 	}
 }

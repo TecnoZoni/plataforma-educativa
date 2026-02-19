@@ -150,4 +150,19 @@ class groupModel extends mainModel
 		ORDER BY g.id;";
 		return self::execute_single_query($query);
 	}
+
+	public function remove_student_from_group_model($grupo_id, $codigo)
+	{
+		$grupo_id = (int)$grupo_id;
+		$codigo   = trim($codigo);
+
+		if ($grupo_id <= 0 || empty($codigo)) {
+			return false;
+		}
+
+		$query = self::connect()->prepare("DELETE FROM estudiante_grupo WHERE grupo_id = :grupo_id AND codigo = :codigo");
+		$query->bindParam(":grupo_id", $grupo_id, PDO::PARAM_INT);
+		$query->bindParam(":codigo", $codigo, PDO::PARAM_STR);
+		return $query->execute();
+	}
 }

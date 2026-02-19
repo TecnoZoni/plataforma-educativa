@@ -12,8 +12,14 @@
 
 	$groupIns = new groupController();
 
+	// === AGREGAR ALUMNOS ===
 	if (isset($_POST['id'])) {
 		echo $groupIns->update_student_group_controller();
+	}
+
+	// === QUITAR ALUMNO ===
+	if (isset($_POST['remove_student']) && $_POST['remove_student'] == '1') {
+		echo $groupIns->remove_student_from_group_controller();
 	}
 
 	$code = explode("/", $_GET['views']);
@@ -54,6 +60,7 @@
 											<th>Código</th>
 											<th>Nombres</th>
 											<th>Apellidos</th>
+											<th width="80px" class="text-center">Acciones</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -62,6 +69,17 @@
 												<td><?php echo htmlspecialchars($s['Codigo']); ?></td>
 												<td><?php echo htmlspecialchars($s['Nombres']); ?></td>
 												<td><?php echo htmlspecialchars($s['Apellidos']); ?></td>
+												<td class="text-center">
+													<form action="" method="POST" autocomplete="off"
+														onsubmit="return confirm('¿Estás seguro de quitar a este alumno del grupo?');">
+														<input type="hidden" name="grupo_id" value="<?php echo $rows['id']; ?>">
+														<input type="hidden" name="codigo" value="<?php echo htmlspecialchars($s['Codigo']); ?>">
+														<input type="hidden" name="remove_student" value="1">
+														<button type="submit" class="btn btn-danger btn-raised btn-xs">
+															<i class="zmdi zmdi-delete"></i> Quitar
+														</button>
+													</form>
+												</td>
 											</tr>
 										<?php endforeach; ?>
 									</tbody>
@@ -75,7 +93,7 @@
 			</div>
 		</div>
 
-		<!-- Panel: Formulario para agregar alumnos -->
+		<!-- Panel: Formulario para agregar alumnos (sin cambios) -->
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-12">
