@@ -210,21 +210,6 @@ if ($data->rowCount() > 0):
 							<textarea class="form-control" name="comment" rows="4" required style="font-size: 16px;"></textarea>
 						</div>
 
-						<div class="form-group">
-							<label>Archivo adjunto (opcional)</label>
-							<input type="file" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.ppt,.pptx">
-							<div class="input-group">
-								<input type="text" readonly class="form-control" placeholder="Elija un archivo adjunto...">
-								<span class="input-group-btn input-group-sm">
-									<button type="button" class="btn btn-fab btn-fab-mini">
-										<i class="zmdi zmdi-attachment-alt"></i>
-									</button>
-								</span>
-							</div>
-							<span class="help-block">
-								<small>Máximo 5MB. Formatos permitidos: imágenes (JPG/PNG), PDF, Word, PowerPoint.</small>
-							</span>
-						</div>
 
 						<p class="text-center">
 							<button type="submit" class="btn btn-info btn-raised">Enviar comentario</button>

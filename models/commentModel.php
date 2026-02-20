@@ -9,10 +9,9 @@
 
 		/*----------  Add Comment Model  ----------*/
 		public function add_comment_model($data){
-			$query=self::connect()->prepare("INSERT INTO comentarios(id,Comentario,Adjunto,Tipo,Codigo,Fecha) VALUES(:id,:Comentario,:Adjunto,:Tipo,:Codigo,:Fecha)");
+			$query=self::connect()->prepare("INSERT INTO comentarios(id,Comentario,Tipo,Codigo,Fecha) VALUES(:id,:Comentario,:Tipo,:Codigo,:Fecha)");
 			$query->bindParam(":id",$data['id']);
 			$query->bindParam(":Comentario",$data['Comentario']);
-			$query->bindParam(":Adjunto",$data['Adjunto']);
 			$query->bindParam(":Tipo",$data['Tipo']);
 			$query->bindParam(":Codigo",$data['Codigo']);
 			$query->bindParam(":Fecha",$data['Fecha']);
