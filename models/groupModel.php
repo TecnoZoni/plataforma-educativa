@@ -8,7 +8,6 @@ if ($actionsRequired) {
 class groupModel extends mainModel
 {
 
-
 	public function add_group_model($data)
 	{
 		$query = self::connect()->prepare("INSERT INTO grupos(Nombre,Recompensa,categoria_id) VALUES(:Nombre,:Recompensa,:categoria_id)");

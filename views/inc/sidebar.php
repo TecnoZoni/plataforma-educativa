@@ -128,6 +128,11 @@
 						<i class="zmdi zmdi-tv-list zmdi-hc-fw"></i> Listado de clases
 					</a>
 				</li>
+				<li>
+					<a href="<?php echo SERVERURL; ?>videoactivitylist/">
+						<i class="zmdi zmdi-file zmdi-hc-fw"></i> Actividades pendientes
+					</a>
+				</li>
 			<?php endif; ?>
 		</ul>
 	</div>

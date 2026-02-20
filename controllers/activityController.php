@@ -133,7 +133,6 @@ class activityController extends activityModel
         }
     }
 
-    /*----------  Pagination Activity Controller  ----------*/
     public function pagination_activity_controller($Pagina, $Registros)
     {
         $Pagina = self::clean_string($Pagina);
@@ -256,7 +255,6 @@ class activityController extends activityModel
         return $table;
     }
 
-    /*----------  Data Activity Controller  ----------*/
     public function data_activity_controller($Type, $Code)
     {
         $Type = self::clean_string($Type);
@@ -307,9 +305,145 @@ class activityController extends activityModel
         }
     }
 
-    /*----------  Get User Response Controller ----------*/
     public function get_user_response_controller($clase_id, $codigo)
     {
         return self::get_user_response_model($clase_id, $codigo);
+    }
+
+    public function pagination_activity_list_controller($Pagina, $Registros)
+    {
+        $Pagina    = self::clean_string($Pagina);
+        $Registros = self::clean_string($Registros);
+
+        $Pagina = (isset($Pagina) && $Pagina > 0) ? floor($Pagina) : 1;
+        $Inicio = ($Pagina - 1) * $Registros;  // forma estándar y más clara
+
+        if (!isset($_SESSION['userKey']) || empty($_SESSION['userKey'])) {
+            return '<p class="lead text-center text-danger">Error: Sesión de estudiante no válida.</p>';
+        }
+
+        $codigo_estudiante = self::clean_string($_SESSION['userKey']);
+
+        // 1. Contar total de actividades pendientes
+        $totalQuery = self::execute_single_query("
+        SELECT COUNT(*) as total 
+        FROM estudiante e 
+        JOIN estudiante_grupo eg ON e.Codigo = eg.codigo 
+        JOIN grupos g ON eg.grupo_id = g.id 
+        JOIN grupo_clase gc ON g.id = gc.grupo_id 
+        JOIN clase c ON gc.clase_id = c.id 
+        LEFT JOIN respuestas r ON c.id = r.clase_id AND e.Codigo = r.Codigo 
+        WHERE r.id IS NULL 
+          AND e.Codigo = '$codigo_estudiante'
+    ");
+
+        $rowTotal = $totalQuery->fetch();
+        $Total = (int)($rowTotal['total'] ?? 0);
+
+        if ($Total == 0) {
+            return '
+            <table class="table text-center">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Título</th>
+                        <th class="text-center">Tutor</th>
+                        <th class="text-center">Ver</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5">Aún no tienes actividades pendientes o no estás asignado a ningún grupo.</td>
+                    </tr>
+                </tbody>
+            </table>
+        ';
+        }
+
+        $Npaginas = ceil($Total / $Registros);
+
+        // 2. Consulta paginada
+        $query = self::execute_single_query("
+        SELECT c.id, c.Titulo, c.Fecha, c.Tutor 
+        FROM estudiante e 
+        JOIN estudiante_grupo eg ON e.Codigo = eg.codigo 
+        JOIN grupos g ON eg.grupo_id = g.id 
+        JOIN grupo_clase gc ON g.id = gc.grupo_id 
+        JOIN clase c ON gc.clase_id = c.id 
+        LEFT JOIN respuestas r ON c.id = r.clase_id AND e.Codigo = r.Codigo 
+        WHERE r.id IS NULL 
+          AND e.Codigo = '$codigo_estudiante' 
+        LIMIT $Inicio, $Registros
+    ");
+
+        $table = '
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="text-center">Fecha</th>
+                    <th class="text-center">Título</th>
+                    <th class="text-center">Tutor</th>
+                    <th class="text-center">Ver</th>
+                </tr>
+            </thead>
+            <tbody>
+    ';
+
+        $nt = $Inicio + 1;
+        if ($query->rowCount() > 0) {
+            foreach ($query as $rows) {
+                $table .= '
+                <tr>
+                    <td>' . $nt . '</td>
+                    <td>' . date("d/m/Y", strtotime($rows['Fecha'])) . '</td>
+                    <td>' . htmlspecialchars($rows['Titulo']) . '</td>
+                    <td>' . htmlspecialchars($rows['Tutor']) . '</td>
+                    <td>
+                        <a href="' . SERVERURL . 'classview/' . $rows['id'] . '/" class="btn btn-info btn-raised btn-xs">
+                            <i class="zmdi zmdi-tv"></i>
+                        </a>
+                    </td>
+                </tr>
+            ';
+                $nt++;
+            }
+        } else {
+            $table .= '
+            <tr>
+                <td colspan="5">No hay actividades pendientes en esta página.</td>
+            </tr>
+        ';
+        }
+
+        $table .= '</tbody></table>';
+
+        // Paginación
+        if ($Total > 0) {
+            $table .= '
+            <nav class="text-center full-width">
+                <ul class="pagination pagination-sm">
+        ';
+
+            $prevDisabled = ($Pagina == 1) ? ' class="disabled"' : '';
+            $prevLink     = ($Pagina == 1) ? '#' : SERVERURL . 'videolist/' . ($Pagina - 1) . '/';
+
+            $nextDisabled = ($Pagina >= $Npaginas) ? ' class="disabled"' : '';
+            $nextLink     = ($Pagina >= $Npaginas) ? '#' : SERVERURL . 'videolist/' . ($Pagina + 1) . '/';
+
+            $table .= '<li' . $prevDisabled . '><a href="' . $prevLink . '">«</a></li>';
+
+            for ($i = 1; $i <= $Npaginas; $i++) {
+                $active = ($Pagina == $i) ? ' class="active"' : '';
+                $table .= '<li' . $active . '><a href="' . SERVERURL . 'videolist/' . $i . '/">' . $i . '</a></li>';
+            }
+
+            $table .= '<li' . $nextDisabled . '><a href="' . $nextLink . '">»</a></li>';
+
+            $table .= '</ul></nav>';
+        }
+
+        return $table;
     }
 }

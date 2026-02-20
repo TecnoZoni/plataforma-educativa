@@ -22,6 +22,7 @@ class viewsModel
 			$views == "search" ||
 			$views == "activitylist" ||
 			$views == "activityview" ||
+			$views == "videoactivitylist" ||
 			$views == "group" ||
 			$views == "grouplist" ||
 			$views == "groupinfo" ||

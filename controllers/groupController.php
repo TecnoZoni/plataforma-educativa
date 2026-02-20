@@ -130,7 +130,7 @@ class groupController extends groupModel
 		$Inicio = ($Pagina > 0) ? (($Pagina * $Registros) - $Registros) : 0;
 
 		$Datos = self::execute_single_query("
-				SELECT * FROM grupos ORDER BY id ASC LIMIT $Inicio,$Registros
+				SELECT g.id, g.Nombre, g.Recompensa, cat.Nombre AS Categoria FROM grupos g INNER JOIN categoria cat ON g.categoria_id = cat.id ORDER BY id ASC LIMIT $Inicio,$Registros
 			");
 		$Datos = $Datos->fetchAll();
 
@@ -163,7 +163,7 @@ class groupController extends groupModel
 						<td>' . $nt . '</td>
 						<td>' . $rows['Nombre'] . '</td>
 						<td>' . $rows['Recompensa'] . '</td>
-						<td>' . $rows['categoria_id'] . '</td>
+						<td>' . $rows['Categoria'] . '</td>
 						<td>
 							<a href="' . SERVERURL . 'groupinfo/' . $rows['id'] . '/" class="btn btn-success btn-raised btn-xs">
 								<i class="zmdi zmdi-refresh"></i>
