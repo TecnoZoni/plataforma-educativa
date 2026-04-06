@@ -883,13 +883,8 @@ class videoController extends videoModel
 			return self::sweet_alert_single($dataAlert);
 		}
 
-		if (!is_array($groups) || empty($groups)) {
-			$dataAlert = [
-				"title" => "¡Atención!",
-				"text" => "Debes seleccionar al menos un grupo",
-				"type" => "warning"
-			];
-			return self::sweet_alert_single($dataAlert);
+		if (!is_array($groups)) {
+			$groups = [];
 		}
 
 		$grupos_limpios = [];
@@ -900,19 +895,10 @@ class videoController extends videoModel
 			}
 		}
 
-		if (empty($grupos_limpios)) {
-			$dataAlert = [
-				"title" => "¡Ocurrió un error inesperado!",
-				"text" => "No hay grupos válidos",
-				"type" => "error"
-			];
-			return self::sweet_alert_single($dataAlert);
-		}
-
 		if (self::set_class_group_model($clase_id, $grupos_limpios)) {
 			$dataAlert = [
 				"title" => "¡Éxito!",
-				"text" => "La clase fue asignada correctamente a los grupos seleccionados",
+				"text" => "Asignación de grupos actualizada correctamente",
 				"type" => "success"
 			];
 			return self::sweet_alert_single($dataAlert);

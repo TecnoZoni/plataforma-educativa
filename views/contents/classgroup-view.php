@@ -16,11 +16,12 @@
     $videoIns = new videoController();
 
     // Procesar POST
-    if (isset($_POST['groups']) && is_array($_POST['groups'])) {
+    if (isset($_POST['groups_submitted'])) {
         $code = explode("/", $_GET['views']);
         $class_id = $code[1] ?? null;
         if ($class_id) {
-            echo $videoIns->set_class_group_controller($class_id, $_POST['groups']);
+            $groups = $_POST['groups'] ?? [];
+            echo $videoIns->set_class_group_controller($class_id, $groups);
         }
     }
 
@@ -61,6 +62,7 @@
                         </div>
                         <div class="panel-body">
                             <form action="" method="POST" autocomplete="off">
+                                <input type="hidden" name="groups_submitted" value="1">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-striped">
                                         <thead>
