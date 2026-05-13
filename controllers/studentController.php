@@ -221,6 +221,126 @@ class studentController extends studentModel
 		return $table;
 	}
 
+	/*----------  Pagination Student Search Controller  ----------*/
+	public function pagination_student_search_controller($Pagina, $Registros, $search)
+	{
+		$Pagina = self::clean_string($Pagina);
+		$Registros = self::clean_string($Registros);
+		$search = self::clean_string($search);
+
+		$Pagina = (isset($Pagina) && $Pagina > 0) ? floor($Pagina) : 1;
+
+		$Inicio = ($Pagina > 0) ? (($Pagina * $Registros) - $Registros) : 0;
+
+		$Datos = self::execute_single_query("
+				SELECT * FROM estudiante
+				WHERE Nombres LIKE '%$search%' OR Apellidos LIKE '%$search%'
+				ORDER BY Nombres ASC
+				LIMIT $Inicio,$Registros
+			");
+		$Datos = $Datos->fetchAll();
+
+		$Total = self::execute_single_query("
+				SELECT Codigo FROM estudiante
+				WHERE Nombres LIKE '%$search%' OR Apellidos LIKE '%$search%'
+			");
+		$Total = $Total->rowCount();
+
+		$Npaginas = ceil($Total / $Registros);
+
+		$table = '
+				<table class="table text-center">
+					<thead>
+						<tr>
+							<th class="text-center">#</th>
+							<th class="text-center">Nombres</th>
+							<th class="text-center">Apellidos</th>
+							<th class="text-center">A. Datos</th>
+							<th class="text-center">A. Cuenta</th>
+							<th class="text-center">Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+				';
+
+		if ($Total >= 1) {
+			$nt = $Inicio + 1;
+			foreach ($Datos as $rows) {
+				$table .= '
+						<tr>
+							<td>' . $nt . '</td>
+							<td>' . $rows['Nombres'] . '</td>
+							<td>' . $rows['Apellidos'] . '</td>
+							<td>
+								<a href="' . SERVERURL . 'studentinfo/' . $rows['Codigo'] . '/" class="btn btn-success btn-raised btn-xs">
+									<i class="zmdi zmdi-refresh"></i>
+								</a>
+							</td>
+							<td>
+								<a href="' . SERVERURL . 'account/' . $rows['Codigo'] . '/" class="btn btn-success btn-raised btn-xs">
+									<i class="zmdi zmdi-refresh"></i>
+								</a>
+							</td>
+							<td>
+								<a href="#!" class="btn btn-danger btn-raised btn-xs btnFormsAjax" data-action="delete" data-id="del-' . $rows['Codigo'] . '">
+									<i class="zmdi zmdi-delete"></i>
+								</a>
+								<form action="" id="del-' . $rows['Codigo'] . '" method="POST" enctype="multipart/form-data">
+									<input type="hidden" name="studentCode" value="' . $rows['Codigo'] . '">
+								</form>
+							</td>
+						</tr>
+						';
+				$nt++;
+			}
+		} else {
+			$table .= '
+					<tr>
+						<td colspan="6">No hay estudiantes que coincidan con la búsqueda</td>
+					</tr>
+					';
+		}
+
+		$table .= '
+					</tbody>
+				</table>
+				';
+
+		if ($Total >= 1) {
+			$table .= '
+						<nav class="text-center full-width">
+							<ul class="pagination pagination-sm">
+					';
+
+			if ($Pagina == 1) {
+				$table .= '<li class="disabled"><a>«</a></li>';
+			} else {
+				$table .= '<li><a href="' . SERVERURL . 'studentlist/' . ($Pagina - 1) . '/">«</a></li>';
+			}
+
+			for ($i = 1; $i <= $Npaginas; $i++) {
+				if ($Pagina == $i) {
+					$table .= '<li class="active"><a href="' . SERVERURL . 'studentlist/' . $i . '/">' . $i . '</a></li>';
+				} else {
+					$table .= '<li><a href="' . SERVERURL . 'studentlist/' . $i . '/">' . $i . '</a></li>';
+				}
+			}
+
+			if ($Pagina == $Npaginas) {
+				$table .= '<li class="disabled"><a>»</a></li>';
+			} else {
+				$table .= '<li><a href="' . SERVERURL . 'studentlist/' . ($Pagina + 1) . '/">»</a></li>';
+			}
+
+			$table .= '
+							</ul>
+						</nav>
+					';
+		}
+
+		return $table;
+	}
+
 	/*----------  Delete Student Controller  ----------*/
 	public function delete_student_controller($code)
 	{
