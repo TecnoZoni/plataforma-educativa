@@ -27,6 +27,7 @@ class viewsModel
 			$views == "grouplist" ||
 			$views == "groupinfo" ||
 			$views == "groupstudent" ||
+			$views == "groupstats" ||
 			$views == "classgroup"
 		) {
 			if (is_file("./views/contents/" . $views . "-view.php")) {
