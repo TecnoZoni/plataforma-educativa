@@ -208,21 +208,21 @@ class groupController extends groupModel
 			if ($Pagina == 1) {
 				$table .= '<li class="disabled"><a>«</a></li>';
 			} else {
-				$table .= '<li><a href="' . SERVERURL . 'studentlist/' . ($Pagina - 1) . '/">«</a></li>';
+				$table .= '<li><a href="' . SERVERURL . 'grouplist/' . ($Pagina - 1) . '/">«</a></li>';
 			}
 
 			for ($i = 1; $i <= $Npaginas; $i++) {
 				if ($Pagina == $i) {
-					$table .= '<li class="active"><a href="' . SERVERURL . 'studentlist/' . $i . '/">' . $i . '</a></li>';
+					$table .= '<li class="active"><a href="' . SERVERURL . 'grouplist/' . $i . '/">' . $i . '</a></li>';
 				} else {
-					$table .= '<li><a href="' . SERVERURL . 'studentlist/' . $i . '/">' . $i . '</a></li>';
+					$table .= '<li><a href="' . SERVERURL . 'grouplist/' . $i . '/">' . $i . '</a></li>';
 				}
 			}
 
 			if ($Pagina == $Npaginas) {
 				$table .= '<li class="disabled"><a>»</a></li>';
 			} else {
-				$table .= '<li><a href="' . SERVERURL . 'studentlist/' . ($Pagina + 1) . '/">»</a></li>';
+				$table .= '<li><a href="' . SERVERURL . 'grouplist/' . ($Pagina + 1) . '/">»</a></li>';
 			}
 
 			$table .= '
