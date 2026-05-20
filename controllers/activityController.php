@@ -9,6 +9,25 @@ class activityController extends activityModel
 {
     public function add_response_activity_controller()
     {
+        // Guardia: respuesta vacia NO debe sobreescribir una respuesta existente
+        // (caso doble-submit con internet lento).
+        if (!isset($_POST['response']) || trim($_POST['response']) === "") {
+            return self::sweet_alert_single([
+                "title" => "Respuesta vacía",
+                "text"  => "Escribí la respuesta antes de enviarla.",
+                "type"  => "warning"
+            ]);
+        }
+
+        // Guardia: codigos requeridos para identificar clase y alumno.
+        if (empty($_POST['codeVideo']) || empty($_POST['codeUser'])) {
+            return self::sweet_alert_single([
+                "title" => "Datos faltantes",
+                "text"  => "No se pudo identificar la clase o el alumno.",
+                "type"  => "error"
+            ]);
+        }
+
         $id_clase = self::clean_string($_POST['codeVideo']);
         $codeUser = self::clean_string($_POST['codeUser']);
         $response = $_POST['response'];

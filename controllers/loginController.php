@@ -10,6 +10,24 @@
 		/* Controlador para iniciar sesion - Controller to log in*/
 		public function login_session_start_controller(){
 
+			// 1) Idempotencia de sesion: si ya esta logueado, redirigir sin re-procesar.
+			//    Previene que un segundo POST (doble-submit) sobreescriba o duplique sesion.
+			if (isset($_SESSION['userKey']) && !empty($_SESSION['userKey'])) {
+				$url = (isset($_SESSION['userType']) && $_SESSION['userType'] === "Administrador")
+					? SERVERURL . "dashboard/"
+					: SERVERURL . "home/";
+				return '<script type="text/javascript"> window.location="' . $url . '"; </script>';
+			}
+
+			// 2) Guardia de campos vacios (anti doble-submit con payload vacio).
+			if (empty($_POST['loginUserName']) || empty($_POST['loginUserPass'])) {
+				return self::sweet_alert_single([
+					"title" => "Datos incompletos",
+					"text"  => "Ingresá usuario y contraseña.",
+					"type"  => "warning"
+				]);
+			}
+
 			$userName=self::clean_string($_POST['loginUserName']);
 			$userPass=self::clean_string($_POST['loginUserPass']);
 

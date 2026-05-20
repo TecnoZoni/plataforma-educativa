@@ -11,6 +11,18 @@ class videoController extends videoModel
 	/*----------  Add Video Controller  ----------*/
 	public function add_video_controller()
 	{
+		// Guardia de payload completo (anti doble-submit + cliente malformado)
+		$required = ['title','teacher','date','code','description','activity'];
+		foreach ($required as $f) {
+			if (!isset($_POST[$f]) || trim((string)$_POST[$f]) === '') {
+				return self::sweet_alert_single([
+					"title" => "Datos incompletos",
+					"text"  => "Falta completar el campo: " . $f,
+					"type"  => "warning"
+				]);
+			}
+		}
+
 		$title = self::clean_string($_POST['title']);
 		$teacher = self::clean_string($_POST['teacher']);
 		$date = self::clean_string($_POST['date']);
@@ -746,6 +758,18 @@ class videoController extends videoModel
 	/*----------  Update Video Controller  ----------*/
 	public function update_video_controller()
 	{
+		// Guardia de payload completo (anti doble-submit + cliente malformado)
+		$required = ['upid','title','teacher','date','upcode','description','activity'];
+		foreach ($required as $f) {
+			if (!isset($_POST[$f]) || trim((string)$_POST[$f]) === '') {
+				return self::sweet_alert_single([
+					"title" => "Datos incompletos",
+					"text"  => "Falta completar el campo: " . $f,
+					"type"  => "warning"
+				]);
+			}
+		}
+
 		$code = self::clean_string($_POST['upid']);
 		$title = self::clean_string($_POST['title']);
 		$teacher = self::clean_string($_POST['teacher']);

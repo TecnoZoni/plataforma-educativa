@@ -11,6 +11,18 @@ class studentController extends studentModel
 	/*----------  Add Student Controller  ----------*/
 	public function add_student_controller()
 	{
+		// Guardia de payload completo (anti doble-submit + cliente malformado)
+		$required = ['name','lastname','gender','username','password1','password2'];
+		foreach ($required as $f) {
+			if (!isset($_POST[$f]) || trim((string)$_POST[$f]) === '') {
+				return self::sweet_alert_single([
+					"title" => "Datos incompletos",
+					"text"  => "Falta completar el campo: " . $f,
+					"type"  => "warning"
+				]);
+			}
+		}
+
 		$name = self::clean_string($_POST['name']);
 		$lastname = self::clean_string($_POST['lastname']);
 		$gender = self::clean_string($_POST['gender']);
@@ -366,6 +378,18 @@ class studentController extends studentModel
 	/*----------  Update Student Controller  ----------*/
 	public function update_student_controller()
 	{
+		// Guardia de payload completo (anti doble-submit + cliente malformado)
+		$required = ['code','name','lastname'];
+		foreach ($required as $f) {
+			if (!isset($_POST[$f]) || trim((string)$_POST[$f]) === '') {
+				return self::sweet_alert_single([
+					"title" => "Datos incompletos",
+					"text"  => "Falta completar el campo: " . $f,
+					"type"  => "warning"
+				]);
+			}
+		}
+
 		$code = self::clean_string($_POST['code']);
 		$name = self::clean_string($_POST['name']);
 		$lastname = self::clean_string($_POST['lastname']);

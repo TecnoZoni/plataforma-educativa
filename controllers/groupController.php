@@ -242,6 +242,18 @@ class groupController extends groupModel
 
 	public function update_group_controller()
 	{
+		// Guardia de payload completo (anti doble-submit + cliente malformado)
+		$required = ['id','name','reward','category'];
+		foreach ($required as $f) {
+			if (!isset($_POST[$f]) || trim((string)$_POST[$f]) === '') {
+				return self::sweet_alert_single([
+					"title" => "Datos incompletos",
+					"text"  => "Falta completar el campo: " . $f,
+					"type"  => "warning"
+				]);
+			}
+		}
+
 		$id = self::clean_string($_POST['id']);
 		$name = self::clean_string($_POST['name']);
 		$recompensa = self::clean_string($_POST['reward']);
@@ -305,6 +317,23 @@ class groupController extends groupModel
 
 	public function update_student_group_controller()
 	{
+		// Guardia inicial de payload (anti doble-submit + cliente malformado).
+		// Las validaciones detalladas debajo se preservan.
+		if (!isset($_POST['id']) || trim((string)$_POST['id']) === '') {
+			return self::sweet_alert_single([
+				"title" => "Datos incompletos",
+				"text"  => "Falta el identificador del grupo.",
+				"type"  => "warning"
+			]);
+		}
+		if (!isset($_POST['students']) || !is_array($_POST['students']) || empty($_POST['students'])) {
+			return self::sweet_alert_single([
+				"title" => "Datos incompletos",
+				"text"  => "No se recibió la lista de alumnos a asignar.",
+				"type"  => "warning"
+			]);
+		}
+
 		// ID del grupo
 		$grupo_id = self::clean_string($_POST['id'] ?? '');
 
