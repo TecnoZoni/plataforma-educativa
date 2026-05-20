@@ -465,37 +465,40 @@ class groupController extends groupModel
 			return null;
 		}
 
-		// 2) Alumnos del grupo
+		// 2) Alumnos del grupo + promedio individual en una sola query
+		//    (LEFT JOIN para incluir alumnos sin notas; filtra Nota > 0 dentro del AVG)
 		$alumnos_stmt = self::execute_single_query("
-			SELECT e.Codigo, e.Nombres, e.Apellidos
+			SELECT
+				e.Codigo,
+				e.Nombres,
+				e.Apellidos,
+				COALESCE(ROUND(AVG(CASE WHEN res.Nota > 0 THEN res.Nota END), 2), 0) AS Promedio
 			FROM estudiante e
-			INNER JOIN estudiante_grupo eg ON e.Codigo COLLATE utf8mb3_spanish_ci = eg.codigo
+			INNER JOIN estudiante_grupo eg
+				ON e.Codigo COLLATE utf8mb3_spanish_ci = eg.codigo
+			LEFT JOIN respuestas res
+				ON res.Codigo COLLATE utf8mb3_spanish_ci = e.Codigo
 			WHERE eg.grupo_id = '$id'
+			GROUP BY e.Codigo, e.Nombres, e.Apellidos
 			ORDER BY e.Nombres ASC
 		");
 		$alumnos = $alumnos_stmt->fetchAll();
 
-		// 3) Promedio individual reutilizando noteController
-		require_once "./controllers/noteController.php";
-		$insNote = new noteController();
-
+		// 3) Promedio "por alumno": media de los promedios individuales (solo > 0)
 		$suma_promedios = 0;
 		$cuenta_con_nota = 0;
-		foreach ($alumnos as &$a) {
-			$a['Promedio'] = $insNote->get_student_note_controller($a['Codigo']);
+		foreach ($alumnos as $a) {
 			if ($a['Promedio'] > 0) {
-				$suma_promedios += $a['Promedio'];
+				$suma_promedios += (float)$a['Promedio'];
 				$cuenta_con_nota++;
 			}
 		}
-		unset($a);
 
-		// 4a) Promedio "por alumno": media de los promedios individuales con nota > 0
 		$promedio_por_alumno = $cuenta_con_nota > 0
 			? round($suma_promedios / $cuenta_con_nota, 2)
 			: 0.00;
 
-		// 4b) Promedio "global": AVG sobre TODAS las respuestas calificadas del grupo
+		// 4) Promedio "global": AVG sobre TODAS las respuestas calificadas del grupo
 		$avg_stmt = self::execute_single_query("
 			SELECT AVG(res.Nota) AS prom
 			FROM respuestas res
