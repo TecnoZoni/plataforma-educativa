@@ -11,6 +11,18 @@ class commentController extends commentModel
 	/*----------  Add Comment Controller  ----------*/
 	public function add_comment_controller()
 	{
+		// Guardia de payload completo (anti doble-submit + cliente malformado)
+		$required = ['codeClass','codeUser','typeUSer','comment'];
+		foreach ($required as $f) {
+			if (!isset($_POST[$f]) || trim((string)$_POST[$f]) === '') {
+				return self::sweet_alert_single([
+					"title" => "Datos incompletos",
+					"text"  => "Falta completar el campo: " . $f,
+					"type"  => "warning"
+				]);
+			}
+		}
+
 		$codeClass = self::clean_string($_POST['codeClass']);
 		$codeUser = self::clean_string($_POST['codeUser']);
 		$typeUSer = self::clean_string($_POST['typeUSer']);
@@ -172,6 +184,15 @@ class commentController extends commentModel
 	/*----------  Delete Comment Controller  ----------*/
 	public function delete_comment_controller($code, $codeU, $urls)
 	{
+		// Guardia: identificadores requeridos (anti doble-submit / payload malformado)
+		if (empty($code) || empty($codeU)) {
+			return self::sweet_alert_single([
+				"title" => "Datos incompletos",
+				"text"  => "No se pudo identificar el comentario a eliminar.",
+				"type"  => "warning"
+			]);
+		}
+
 		$code = self::clean_string($code);
 		$codeU = self::clean_string($codeU);
 

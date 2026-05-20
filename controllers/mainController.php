@@ -23,6 +23,19 @@
 
 
 		public function update_account_controller(){
+			// Guardia de payload completo (anti doble-submit + cliente malformado).
+			// Passwords son opcionales (vacios = no cambiar), por eso NO van en required.
+			$required = ['code','oldusername','username','gender'];
+			foreach ($required as $f) {
+				if (!isset($_POST[$f]) || trim((string)$_POST[$f]) === '') {
+					return self::sweet_alert_single([
+						"title" => "Datos incompletos",
+						"text"  => "Falta completar el campo: " . $f,
+						"type"  => "warning"
+					]);
+				}
+			}
+
 			$code=self::clean_string($_POST['code']);
 			$oldusername=self::clean_string($_POST['oldusername']);
 			$username=self::clean_string($_POST['username']);
