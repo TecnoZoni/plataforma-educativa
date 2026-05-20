@@ -76,15 +76,23 @@ $(document).ready(function(){
     /*Funcion para enviar datos de formularios con ajax*/
     $('.ajaxDataForm').submit(function(e){
         e.preventDefault();
-        var formProcess=$(this).children('.form-process');
-        var formType=$(this).attr('data-form');
         var form=$(this);
+
+        // GUARDIA: ignora reentradas mientras hay un submit en vuelo
+        if (form.attr('data-submitting') === '1') {
+            return false;
+        }
+        form.attr('data-submitting', '1');
+
+        var formProcess=form.children('.form-process');
+        var formType=form.attr('data-form');
+        var submitBtns=form.find('button[type=submit], input[type=submit]');
         var formdata=false;
-        var formAction=$(this).attr('action');
+        var formAction=form.attr('action');
         if (window.FormData){
             formdata = new FormData(form[0]);
         }
- 		
+
  		var alertText;
         if(formType==="AddComent"){
         	alertText="Quieres agregar un comentario a esta clase";
@@ -101,13 +109,14 @@ $(document).ready(function(){
         var metodo=form.attr('method');
         var msjErrorAlert="<script>swal('Ocurrió un error inesperado','Por favor recargue la página','error');</script>";
         swal({
-            title: "¿Estás seguro?",   
-            text: alertText,   
-            type: "warning",   
-            showCancelButton: true,     
+            title: "¿Estás seguro?",
+            text: alertText,
+            type: "warning",
+            showCancelButton: true,
             confirmButtonText: "Si, aceptar",
             cancelButtonText: "No, cancelar"
         }).then(function () {
+            submitBtns.prop('disabled', true);
             $.ajax({
                 type: metodo,
                 url: formAction,
@@ -135,10 +144,31 @@ $(document).ready(function(){
                 },
                 error: function() {
                     formProcess.html(msjErrorAlert);
+                },
+                complete: function() {
+                    submitBtns.prop('disabled', false);
+                    form.attr('data-submitting', '');
                 }
             });
             return false;
+        }, function() {
+            // Cancelado por usuario en el SweetAlert: liberar el form
+            form.attr('data-submitting', '');
         });
+    });
+
+    /* Anti doble-submit para forms NATIVOS (no AJAX).
+       Cubre login, activity submit y cualquier <form> sin clase .ajaxDataForm.
+       Escape hatch: agregar clase .no-double-submit-guard al form si se necesita
+       permitir multi-submit por diseño. */
+    $(document).on('submit', 'form:not(.ajaxDataForm):not(.no-double-submit-guard)', function() {
+        var form = $(this);
+        if (form.attr('data-submitting') === '1') {
+            return false;
+        }
+        form.attr('data-submitting', '1');
+        form.find('button[type=submit], input[type=submit]').prop('disabled', true);
+        // No reseteamos: el browser navega tras el submit nativo.
     });
 
 });
