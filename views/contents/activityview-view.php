@@ -54,13 +54,20 @@
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							<h3 class="panel-title text-center"><i class="zmdi zmdi-info"></i> Respuesta a la tarea</h3>
-							<?php echo $rows['Actividad']; ?>
 						</div>
 						<div class="panel-body">
-							<?php echo $rows['Respuesta']; ?>
+							<h4 class="text-titles"><i class="zmdi zmdi-assignment"></i> Consigna</h4>
+							<div style="font-size: 16px; line-height: 1.6; padding: 15px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 20px;">
+								<?php echo $rows['Actividad']; ?>
+							</div>
+
+							<h4 class="text-titles"><i class="zmdi zmdi-comment-text"></i> Respuesta del alumno</h4>
+							<div style="font-size: 16px; line-height: 1.6; min-height: 120px; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px;">
+								<?php echo $rows['Respuesta']; ?>
+							</div>
 
 							<?php if ($rows['Adjuntos'] != ""): ?>
-								<br><br>
+								<br>
 								<h4 class="text-center"><i class="zmdi zmdi-cloud-download"></i> Archivos adjuntos</h4>
 								<table class="table table-hover">
 									<thead>
@@ -77,7 +84,7 @@
 											<tr>
 												<td><?php echo $files; ?></td>
 												<td class="text-center">
-													<a href="<?php echo SERVERURL; ?>attachments/class/<?php echo $files; ?>" download="<?php echo $files; ?>" class="btn btn-primary btn-raised btn-xs">
+													<a href="<?php echo SERVERURL; ?>attachments/activity/<?php echo $files; ?>" download="<?php echo $files; ?>" class="btn btn-primary btn-raised btn-xs">
 														<i class="zmdi zmdi-download"></i>
 													</a>
 												</td>

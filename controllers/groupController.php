@@ -149,6 +149,7 @@ class groupController extends groupModel
 						<th class="text-center">Categoría</th>
 						<th class="text-center">A. Grupo</th>
 						<th class="text-center">A. Estudiantes</th>
+						<th class="text-center">Estadísticas</th>
 						<th class="text-center">Eliminar</th>
 					</tr>
 				</thead>
@@ -175,6 +176,11 @@ class groupController extends groupModel
 							</a>
 						</td>
 						<td>
+							<a href="' . SERVERURL . 'groupstats/' . $rows['id'] . '/" class="btn btn-info btn-raised btn-xs" title="Ver estadísticas">
+								<i class="zmdi zmdi-chart"></i>
+							</a>
+						</td>
+						<td>
 							<a href="#!" class="btn btn-danger btn-raised btn-xs btnFormsAjax" data-action="delete" data-id="del-' . $rows['id'] . '">
 								<i class="zmdi zmdi-delete"></i>
 							</a>
@@ -189,7 +195,7 @@ class groupController extends groupModel
 		} else {
 			$table .= '
 				<tr>
-					<td colspan="5">No hay registros en el sistema</td>
+					<td colspan="8">No hay registros en el sistema</td>
 				</tr>
 				';
 		}
@@ -435,5 +441,80 @@ class groupController extends groupModel
 			];
 		}
 		return self::sweet_alert_single($dataAlert);
+	}
+
+	/*----------  Group Stats Controller  ----------*/
+	public function group_stats_controller($id)
+	{
+		$id = self::clean_string($id);
+
+		if ($id === '' || !is_numeric($id) || $id <= 0) {
+			return null;
+		}
+
+		// 1) Datos del grupo (nombre, recompensa, categoría)
+		$grupo_stmt = self::execute_single_query("
+			SELECT g.id, g.Nombre, g.Recompensa, cat.Nombre AS Categoria
+			FROM grupos g
+			LEFT JOIN categoria cat ON g.categoria_id = cat.id
+			WHERE g.id = '$id'
+		");
+		$grupo = $grupo_stmt->fetch();
+
+		if (!$grupo) {
+			return null;
+		}
+
+		// 2) Alumnos del grupo
+		$alumnos_stmt = self::execute_single_query("
+			SELECT e.Codigo, e.Nombres, e.Apellidos
+			FROM estudiante e
+			INNER JOIN estudiante_grupo eg ON e.Codigo COLLATE utf8mb3_spanish_ci = eg.codigo
+			WHERE eg.grupo_id = '$id'
+			ORDER BY e.Nombres ASC
+		");
+		$alumnos = $alumnos_stmt->fetchAll();
+
+		// 3) Promedio individual reutilizando noteController
+		require_once "./controllers/noteController.php";
+		$insNote = new noteController();
+
+		$suma_promedios = 0;
+		$cuenta_con_nota = 0;
+		foreach ($alumnos as &$a) {
+			$a['Promedio'] = $insNote->get_student_note_controller($a['Codigo']);
+			if ($a['Promedio'] > 0) {
+				$suma_promedios += $a['Promedio'];
+				$cuenta_con_nota++;
+			}
+		}
+		unset($a);
+
+		// 4a) Promedio "por alumno": media de los promedios individuales con nota > 0
+		$promedio_por_alumno = $cuenta_con_nota > 0
+			? round($suma_promedios / $cuenta_con_nota, 2)
+			: 0.00;
+
+		// 4b) Promedio "global": AVG sobre TODAS las respuestas calificadas del grupo
+		$avg_stmt = self::execute_single_query("
+			SELECT AVG(res.Nota) AS prom
+			FROM respuestas res
+			INNER JOIN estudiante_grupo eg
+				ON res.Codigo COLLATE utf8mb3_spanish_ci = eg.codigo
+			WHERE eg.grupo_id = '$id'
+			  AND res.Nota > 0
+		");
+		$avg_row = $avg_stmt->fetch();
+		$promedio_global = $avg_row && $avg_row['prom'] !== null
+			? round((float)$avg_row['prom'], 2)
+			: 0.00;
+
+		return [
+			"grupo"               => $grupo,
+			"alumnos"             => $alumnos,
+			"promedio_por_alumno" => $promedio_por_alumno,
+			"promedio_global"     => $promedio_global,
+			"total_alumnos"       => count($alumnos),
+		];
 	}
 }
